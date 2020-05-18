@@ -1,1 +1,1 @@
-docker build --tag fpm-tecnologia/glpi:1.0 .
+docker build --tag fpm-tecnologia/glpi:1.1 .

@@ -46,7 +46,7 @@ RUN apt install apache2 \
 
 RUN rm /var/www/html/index.html
 
-COPY --chown=www-data:www-data src/glpi /var/www/html
+COPY --chown=www-data:www-data src/glpi /var/www/html/glpi
 
 VOLUME ["/var/www/html/config", "/var/www/html/files", "/var/www/html/plugins"]
 
