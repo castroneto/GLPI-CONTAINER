@@ -16,7 +16,7 @@ ENV MARIADB_PASSWORD glpi
 
 ENV PLUGINS all
 
-WORKDIR /var/www/html
+WORKDIR /var/www/html/glpi
 
 RUN apt update
 
@@ -40,20 +40,28 @@ RUN apt install apache2 \
  php7.3-apcu \
  php7.3-xml \
  curl \
+ unzip \
  php7.3-xmlrpc \
  php-cas \
  php7.3-mbstring -y 
 
-RUN rm /var/www/html/index.html
+#RUN rm /var/www/html/glpi/index.html
 
 COPY --chown=www-data:www-data src/glpi /var/www/html/glpi
 
-VOLUME ["/var/www/html/config", "/var/www/html/files", "/var/www/html/plugins"]
+ADD apache2.conf /etc/apache2/apache2.conf
+
+
+ADD plugins.zip /var/www/html/glpi/plugins/
+
+RUN unzip /var/www/html/glpi/plugins/plugins.zip
+
+VOLUME ["/var/www/html/glpi/config", "/var/www/html/glpi/files", "/var/www/html/glpi/plugins"]
 
 ADD glpi-entrypoint.sh plugins.sh /
 
 RUN chmod 755 /glpi-entrypoint.sh /plugins.sh \
-	&& rm -rf /var/www/html/install/install.php
+	&& rm -rf /var/www/html/glpi/install/install.php
 
 EXPOSE 80
 
