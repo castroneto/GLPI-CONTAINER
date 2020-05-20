@@ -1,0 +1,53 @@
+version: "3.3"
+services:
+#
+# GLPI
+#
+    glpi: 
+        build: APACHE/
+        image: fpm-tecnologia/glpi:1.1
+        restart: unless-stopped
+        volumes: 
+          - glpi-volume-files:/var/www/html/glpi/files:rw
+          - glpi-volume-plugins:/var/www/html/glpi/plugins:rw
+        environment: 
+          GLPI_LANG: pt_BR
+          MARIADB_HOST: mariadb-glpi
+          MARIADB_PORT: 3306
+          MARIADB_DATABASE: glpi
+          MARIADB_USER: glpi-user
+          MARIADB_PASSWORD: glpi-pass
+          VERSION: "9.4.5"
+          PLUGINS: "all"
+        ports: 
+          - 8080:80
+#
+# CRON
+#
+    crond: 
+        build: CROND/
+        image: fpm-tecnologia/crond:1.1
+        restart: unless-stopped
+        depends_on: 
+          - glpi
+        environment: 
+          MARIADB_HOST: mariadb-glpi
+          MARIADB_PORT: 3306
+          MARIADB_DATABASE: glpi
+          MARIADB_USER: glpi-user
+          MARIADB_PASSWORD: glpi-pass
+        volumes: 
+          - glpi-volume-files:/var/www/html/glpi/files:rw
+          - glpi-volume-plugins:/var/www/html/glpi/plugins:rw
+#
+# VOLUMES
+#
+volumes: 
+  glpi-volume-files:
+  glpi-volume-plugins:
+#
+networks: 
+  default:
+    external:
+      name: glpi_glpi-backend
+

@@ -11,3 +11,4 @@ docker run -d --name docker_glpi_web \
 -e PLUGINS="all" \
 -p 8080:80 \
 fpm-tecnologia/glpi:1.1
+
